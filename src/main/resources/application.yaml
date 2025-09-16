@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: lessonswithai
+  datasource:
+    url: jdbc:mysql://localhost:3306/LessonsWithAI?createDatabaseIfNotExist=true
+    username: root
+    password: 2490
