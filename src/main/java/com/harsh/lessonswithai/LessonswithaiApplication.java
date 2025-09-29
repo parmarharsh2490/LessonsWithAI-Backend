@@ -1,6 +1,5 @@
 package com.harsh.lessonswithai;
 
-import com.harsh.lessonswithai.user.model.UserDto;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +14,7 @@ public class LessonswithaiApplication {
     }
 
     @GetMapping("/")
-    public UserDto homePage(){
-        var user = new UserDto();
-        user.setName("Harsh");
-        user.setEmail("Harsh@gmail.com");
-        return user;
+    public String homePage(){
+        return "Hello World";
     }
 }

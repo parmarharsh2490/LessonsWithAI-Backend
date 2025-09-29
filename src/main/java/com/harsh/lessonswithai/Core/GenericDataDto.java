@@ -1,11 +1,10 @@
-package com.harsh.lessonswithai.Utils;
+package com.harsh.lessonswithai.Core;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 @Getter
 @Setter
@@ -35,6 +34,11 @@ public class GenericDataDto<T> {
       this.responseCode = responseCode;
       this.responseMessage = responseMessage;
       this.data = data;
+   }
+
+   public void setResponseData(int responseCode,String responseMessage){
+      this.responseCode = responseCode;
+      this.responseMessage = responseMessage;
    }
 
    public void setResponseData(int responseCode,String responseMessage, ArrayList<T> dataList){

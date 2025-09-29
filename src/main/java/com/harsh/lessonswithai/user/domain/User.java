@@ -1,30 +1,25 @@
 package com.harsh.lessonswithai.user.domain;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@Table
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "user")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id",nullable = false)
-    private Long id;
+    private String id;
 
-    @Column(name = "name",nullable = false)
-    private String name;
+    @Column(name = "first_name",nullable = false)
+    private String first_name;
+
+    @Column(name = "last_name",nullable = false)
+    private String last_name;
 
     @Column(name = "email",nullable = false)
     private String email;
-
-    @Column(name = "is_deleted",nullable = false)
-    private boolean is_deleted;
 
 //    @OneToMany(mappedBy = "user")
 //    ArrayList<AssistantDto> assistantLists = new ArrayList<>();
