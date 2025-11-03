@@ -6,7 +6,6 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 @Slf4j
 @Configuration
 public class KeycloakAdminConfig {
@@ -29,11 +28,11 @@ public class KeycloakAdminConfig {
     public Keycloak keycloakAdmin() {
         log.info("Keycloak Admin " + admin_email);
         return KeycloakBuilder.builder()
-                .serverUrl(keycloak_url) // Keycloak URL
-                .realm("master")        // master realm for admin login
-                .clientId("admin-cli")  // admin client             // Client with admin rights
-                .username(admin_email)                   // Admin username
-                .password(admin_password)                   // Admin password
+                .serverUrl(keycloak_url)
+                .realm("master") // ✅ must be master for admin credentials
+                .clientId("admin-cli") // ✅ use admin-cli, not your app client
+                .username(admin_email)
+                .password(admin_password)
                 .build();
     }
 }

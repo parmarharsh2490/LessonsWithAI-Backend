@@ -4,43 +4,29 @@ import com.harsh.lessonswithai.Assistant.domain.Assistant;
 import com.harsh.lessonswithai.Assistant.mapper.AssistantMapper;
 import com.harsh.lessonswithai.Assistant.model.AssistantDto;
 import com.harsh.lessonswithai.Assistant.repository.AssistantRepository;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import com.harsh.lessonswithai.Core.ApiService;
+import com.harsh.lessonswithai.Utils.Auth.AuthService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
-public class AssistantService {
+public class AssistantService extends ApiService<Assistant, AssistantDto> {
     private final AssistantRepository repository;
-    private final AssistantMapper mapper;
-
-    public AssistantService(AssistantRepository repository, AssistantMapper mapper) {
+    private final AuthService authService;
+    public AssistantService(AssistantRepository repository, AssistantMapper mapper, AuthService authService) {
+        super(repository,mapper);
         this.repository = repository;
-        this.mapper = mapper;
+        this.authService = authService;
     }
 
-    public AssistantDto get(String id){
-        return this.repository.findById(id).map(mapper::modelToDto).orElseThrow(() -> new RuntimeException("Assistant Not Found"));
+    @Override
+    public List<AssistantDto> getAll() {
+        return this.repository.findAllByUserIdOrderByCreatedAtDesc(authService.getUser_id()).stream().map(mapper::modelToDto).toList();
     }
 
-    public Assistant save(Assistant assistant){
-        return this.repository.save(assistant);
-    }
-
-    public ArrayList<AssistantDto> getAll(Long user_id, int page, int rowPerPage){
-        Pageable pageable = PageRequest.of(page, rowPerPage, Sort.by("id").descending());
-        return this.repository.findByUserId(user_id,pageable).stream().map(mapper::modelToDto).collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    public boolean delete(String id){
-        if(repository.existsById(id)){
-            this.repository.deleteById(id);
-            return true;
-        }else{
-            return false;
-        }
+    public AssistantDto getByAssistantId(String assistantId){
+        Assistant assistant = this.repository.findByAssistantId(assistantId);
+        return mapper.modelToDto(assistant);
     }
 }

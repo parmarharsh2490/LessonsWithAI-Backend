@@ -21,34 +21,40 @@ public class UserController extends ApiController<User,UserDto> {
     @Value("${spring.application.keycloak_realm_name}")
     private String keycloak_realm_name;
 
-    private final UserService service;
-    private final UserMapper mapper;
-
     private final Keycloak keycloak;
 
     public UserController(UserService service, UserMapper mapper, Keycloak keycloak) {
         super(service,mapper);
-        this.service = service;
-        this.mapper = mapper;
         this.keycloak = keycloak;
+    }
+
+    public String getModuleName(){
+        return "User";
     }
 
     @Override
     public ResponseEntity<GenericDataDto<UserDto>> get(String id) {
-        return null;
+        return this.methodNotAllowed();
     }
 
     @Override
-    public ResponseEntity<GenericDataDto<UserDto>> save(@RequestBody UserDto data) {
+    public ResponseEntity<GenericDataDto<UserDto>> update(@RequestBody UserDto data) {
         var dto = new GenericDataDto<UserDto>();
         try {
             var users = keycloak.realm(keycloak_realm_name).users();
+
             UserResource userResource = users.get(data.getId());
+
             UserRepresentation userRepresentation = userResource.toRepresentation();
-            userRepresentation.setFirstName(data.getFirst_name());
-            userRepresentation.setLastName(data.getLast_name());
+
+            userRepresentation.setUsername(data.getEmail());
+            userRepresentation.setEmail(data.getEmail());
+            userRepresentation.setFirstName(data.getFirstName());
+            userRepresentation.setLastName(data.getLastName());
+            userRepresentation.setEnabled(true);
             userResource.update(userRepresentation);
-            return super.save(data);
+
+            dto.setResponseData(200,"Successfully Updated User");
         } catch (Exception e) {
             log.info("Keycloak Error : {}", e.getMessage());
             dto.setError(500,"Failed to Update");

@@ -2,14 +2,17 @@ spring:
   application:
     name: lessonswithai
     keycloak_realm_name: lessonswithai
-    keycloak_client_id: lessonswithai-app
+    keycloak_client_id: lessonswithai
     keycloak_url: http://localhost:8080
-    admin_email: parmarharsh6480@gmail.com
-    admin_password: parmarharsh6480@gmail.com
+    admin_email: admin@lessonswithai.com
+    admin_password: admin@lessonswithai.com
+    vapiApiKey: d27becf5-882f-47a8-82ee-600d3405e511
+    vapi_public_key: 5864f127-79a4-4e01-a970-9b1c74c05de8
+    vapi_private_key: d27becf5-882f-47a8-82ee-600d3405e511
   frontend:
     url: http://localhost:4200
   datasource:
-    url: jdbc:mysql://localhost:3306/LessonsWithAI?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/LessonsWithAI
     username: root
     password: 2490
   security:
@@ -17,6 +20,11 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/lessonswithai
+          jwk-set-uri: http://localhost:8080/realms/lessonswithai/protocol/openid-connect/certs
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 server:
   port: 8081
 logging:

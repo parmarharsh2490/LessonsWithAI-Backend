@@ -6,87 +6,67 @@ import com.harsh.lessonswithai.Assistant.model.AssistantDto;
 import com.harsh.lessonswithai.Assistant.service.AssistantService;
 import com.harsh.lessonswithai.Core.ApiController;
 import com.harsh.lessonswithai.Core.GenericDataDto;
-import com.harsh.lessonswithai.Utils.Auth.AuthService;
+import com.harsh.lessonswithai.VoiceAI.Assistant.VoiceAIAssistant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/assistant")
-public class AssistantController {
-    private final AssistantService service;
-    private final AssistantMapper mapper;
-    private final AuthService authService;
+public class AssistantController extends ApiController<Assistant,AssistantDto>{
+    private final VoiceAIAssistant voiceAIAssistant;
 
-    public AssistantController(AssistantService service, AssistantMapper mapper, AuthService authService) {
-        this.service = service;
-        this.mapper = mapper;
-        this.authService = authService;
+    public AssistantController(AssistantService service, AssistantMapper mapper, VoiceAIAssistant voiceAIAssistant) {
+        super(service,mapper);
+        this.voiceAIAssistant = voiceAIAssistant;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<GenericDataDto<AssistantDto>> getAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int rowPerPage
-    ) {
-        var dataDto = new GenericDataDto<AssistantDto>();
+    public String getModuleName(){
+        return "Assistant";
+    }
+
+    @Override
+    public ResponseEntity<GenericDataDto<AssistantDto>> save(@RequestBody AssistantDto data) {
+        var dto = new GenericDataDto<AssistantDto>();
         try {
-            ArrayList<AssistantDto> assistants = service.getAll(Long.valueOf(authService.getUser_id()), page, rowPerPage);
-            dataDto.setResponseData(200,"Successfully Get Assistants",assistants);
+            var response = voiceAIAssistant.create(data);
+            return super.save(response);
         } catch (Exception e) {
-            log.info("Assistant Get All Error : {}", e.getMessage());
-            dataDto.setError(500,"Failed To Get Assistants");
+            log.info("Assistant Save Error : {}", e.getMessage());
+            dto.setError(400,"Failed To Create Assistant");
         }
-        return dataDto.sendResponse();
+        return dto.sendResponse();
     }
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<GenericDataDto<AssistantDto>> get(@PathVariable String id){
-        var dataDto = new GenericDataDto<AssistantDto>();
-        try{
-            var assistant = service.get(id);
-            dataDto.setResponseData(200,"Successfully Get Assistant",assistant);
-        } catch (RuntimeException e) {
-            dataDto.setError(404,"Assistant Not Found");
-        } catch (Exception e) {
-            log.info("Assistant Get Error " + e.getMessage());
-            dataDto.setError(500,"Error Occurred");
-        }
-        return dataDto.sendResponse();
-    }
-
-    @PostMapping("")
-    @PutMapping("")
-    public ResponseEntity<GenericDataDto<AssistantDto>> save(@RequestBody AssistantDto assistantDto){
-        var dataDto = new GenericDataDto<AssistantDto>();
+    @Override
+    public ResponseEntity<GenericDataDto<AssistantDto>> update(@RequestBody AssistantDto data) {
+        var dto = new GenericDataDto<AssistantDto>();
         try {
-            var assistant = service.save(mapper.dtoToModel(assistantDto));
-            dataDto.setResponseData(201,"Successfully Created Assistant",mapper.modelToDto(assistant));
+            var response = voiceAIAssistant.update(data);
+            return super.update(response);
         } catch (Exception e) {
-            log.info("Failed to Create Assistant " + e.getMessage());
-            dataDto.setError(500,"Failed to Create Assistant");
+            log.info("Assistant Update Error : {}", e.getMessage());
+            dto.setError(400,"Failed To Update Assistant");
         }
-        return dataDto.sendResponse();
+        return dto.sendResponse();
     }
 
+
+    @DeleteMapping("/{id}/{assistant_id}")
+    public ResponseEntity<GenericDataDto<AssistantDto>> delete(@PathVariable String id,@PathVariable String assistant_id) {
+        var dto = new GenericDataDto<AssistantDto>();
+        try {
+            voiceAIAssistant.delete(assistant_id);
+            return super.delete(id);
+        } catch (Exception e) {
+            dto.setError(400,"Failed To Delete Assistant");
+        }
+        return dto.sendResponse();
+    }
+
+    @Override
     public ResponseEntity<GenericDataDto<AssistantDto>> delete(String id) {
-        var dataDto = new GenericDataDto<AssistantDto>();
-        try{
-            var is_assistant_deleted = service.delete(id);
-            if(is_assistant_deleted){
-                dataDto.setResponseData(200,"Successfully Delete Assistant");
-            }else{
-                dataDto.setError(404,"Assistant Not Found");
-            }
-        } catch (Exception e) {
-            log.info("Assistant Delete Error {}", e.getMessage());
-            dataDto.setError(500,"Error Occurred");
-        }
-        return dataDto.sendResponse();
+        return super.methodNotAllowed();
     }
 }

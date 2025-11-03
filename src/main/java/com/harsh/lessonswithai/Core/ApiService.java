@@ -1,16 +1,20 @@
 package com.harsh.lessonswithai.Core;
 
-import org.springframework.stereotype.Service;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public abstract class ApiService<Model> {
-    private final ApiRepository<Model> repository;
+import java.util.List;
 
-    public ApiService(ApiRepository<Model> repository){
+public abstract class ApiService<Model,Mapper> {
+    private final JpaRepository<Model,String> repository;
+    protected final ApiMapper<Model,Mapper>  mapper;
+
+    public ApiService(JpaRepository<Model,String> repository, ApiMapper<Model, Mapper> mapper){
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public Model get(String id){
-        return this.repository.findById(id).orElseThrow(() -> new RuntimeException("Data Not Found"));
+    public Mapper get(String id){
+        return mapper.modelToDto(this.repository.findById(id).orElseThrow(() -> new RuntimeException("Data Not Found")));
     }
 
     public Model save(Model model){
@@ -21,9 +25,11 @@ public abstract class ApiService<Model> {
         return this.repository.save(model);
     }
 
-    public Model delete(String id){
-        Model data = this.repository.getReferenceById(id);
-//        data.setIsDeleted(true);
-        return this.repository.save(data);
+    public void delete(String id){
+        this.repository.deleteById(id);
+    }
+
+    public List<Mapper> getAll(){
+        return this.repository.findAll().stream().map(mapper::modelToDto).toList();
     }
 }

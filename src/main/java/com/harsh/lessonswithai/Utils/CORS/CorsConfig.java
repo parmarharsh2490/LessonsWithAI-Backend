@@ -16,6 +16,7 @@ public class CorsConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        System.out.println("FRONTENDURL : {}" + FRONTEND_URL);
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowedOrigins(List.of(FRONTEND_URL));
         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
