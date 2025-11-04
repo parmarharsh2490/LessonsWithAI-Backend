@@ -5,7 +5,7 @@ COPY . .
 RUN gradle clean bootJar --no-daemon
 
 # ---- Stage 2: Run the JAR ----
-FROM eclipse-temurin:23-jdk-jammy
+FROM eclipse-temurin:23-jdk
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8081
