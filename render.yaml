@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: lessonswithai-backend
+    runtime: docker
+    plan: starter
+    region: oregon
+    buildCommand: docker build -t lessonswithai-backend .
+    startCommand: java $JAVA_OPTS -Dserver.port=$PORT -jar app.jar
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: JAVA_OPTS
+        value: "-Xmx512m -Xms256m"
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+        sync: false
+      - key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+        sync: false
+      - key: SPRING_APPLICATION_KEYCLOAK_URL
+        sync: false
+      - key: SPRING_APPLICATION_KEYCLOAK_REALM_NAME
+        sync: false
+      - key: SPRING_APPLICATION_KEYCLOAK_CLIENT_ID
+        sync: false
+      - key: SPRING_FRONTEND_URL
+        sync: false
