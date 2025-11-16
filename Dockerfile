@@ -1,26 +1,25 @@
-# ---- Build stage (use JDK 21) ----
-FROM eclipse-temurin:21-jdk AS builder
+# =========== BUILD STAGE ===========
+FROM eclipse-temurin:24-jdk AS builder
+
 WORKDIR /app
-
-COPY gradlew gradlew
-COPY gradle gradle
-RUN chmod +x gradlew
-
-COPY build.gradle settings.gradle ./
-COPY gradle.properties gradle.properties || true
-RUN ./gradlew dependencies --no-daemon || true
 
 COPY . .
 
-RUN ./gradlew clean bootJar --no-daemon
+# Give gradlew execute permissions (required inside Linux container)
+RUN chmod +x gradlew
 
-# ---- Run stage (use JRE 21) ----
-FROM eclipse-temurin:21-jre
+# Build the Spring Boot jar
+RUN ./gradlew clean build -x test
+
+
+# =========== RUN STAGE ===========
+FROM eclipse-temurin:24-jdk
+
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/*.jar app.jar
+# Copy EXACT jar from builder stage
+COPY --from=builder /app/build/libs/lessonswithai-0.0.1-SNAPSHOT.jar app/lessonswithai-0.0.1-SNAPSHOT.jar
 
-EXPOSE 8080
+EXPOSE 8081
 
-# Run Spring Boot
-ENTRYPOINT ["java", "-Xms256m", "-Xmx512m", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app/lessonswithai-0.0.1-SNAPSHOT.jar"]

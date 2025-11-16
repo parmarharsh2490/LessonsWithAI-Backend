@@ -1,32 +1,38 @@
 spring:
   application:
-    name: lessonswithai
-    keycloak_realm_name: lessonswithai
-    keycloak_client_id: lessonswithai
-    keycloak_url: http://localhost:8080
-    admin_email: admin@lessonswithai.com
-    admin_password: admin@lessonswithai.com
-    vapiApiKey: d27becf5-882f-47a8-82ee-600d3405e511
-    vapi_public_key: 5864f127-79a4-4e01-a970-9b1c74c05de8
-    vapi_private_key: d27becf5-882f-47a8-82ee-600d3405e511
+    name: ${APP_NAME}
+    keycloak_realm_name: ${KEYCLOAK_REALM_NAME}
+    keycloak_client_id: ${KEYCLOAK_CLIENT_ID}
+    keycloak_url: ${KEYCLOAK_URL}
+    keycloak_admin_email: ${KEYCLOAK_ADMIN_EMAIL}
+    keycloak_admin_password: ${KEYCLOAK_ADMIN_PASSWORD}
+    vapiApiKey: ${VAPI_API_KEY}
+    vapi_public_key: ${VAPI_PUBLIC_KEY}
+    vapi_private_key: ${VAPI_PRIVATE_KEY}
+
   frontend:
-    url: http://localhost:4200
+    url: ${FRONTEND_URL}
+
   datasource:
-    url: jdbc:mysql://localhost:3306/LessonsWithAI
-    username: root
-    password: 2490
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/lessonswithai
-          jwk-set-uri: http://localhost:8080/realms/lessonswithai/protocol/openid-connect/certs
+          issuer-uri: ${JWT_ISSUER_URI}
+          jwk-set-uri: ${JWK_SET_URI}
+
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
+      max-file-size: ${MAX_FILE_SIZE:5MB}
+      max-request-size: ${MAX_REQUEST_SIZE:5MB}
+
 server:
-  port: 8081
+  port: ${SERVER_PORT:8080}
+
 logging:
   file:
-    name: logs/app.log
+    name: ${LOG_FILE_PATH:logs/app.log}
