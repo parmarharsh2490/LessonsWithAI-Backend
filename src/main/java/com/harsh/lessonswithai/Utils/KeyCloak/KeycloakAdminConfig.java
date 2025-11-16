@@ -18,10 +18,10 @@ public class KeycloakAdminConfig {
     @Value("${spring.application.keycloak_url}")
     private String keycloak_url;
 
-    @Value("${spring.application.admin_email}")
+    @Value("${spring.application.keycloak_admin_email}")
     private String admin_email;
 
-    @Value("${spring.application.admin_password}")
+    @Value("${spring.application.keycloak_admin_password}")
     private String admin_password;
 
     @Bean
