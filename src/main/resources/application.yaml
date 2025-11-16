@@ -6,7 +6,6 @@ spring:
     keycloak_url: ${KEYCLOAK_URL}
     keycloak_admin_email: ${KEYCLOAK_ADMIN_EMAIL}
     keycloak_admin_password: ${KEYCLOAK_ADMIN_PASSWORD}
-    vapiApiKey: ${VAPI_API_KEY}
     vapi_public_key: ${VAPI_PUBLIC_KEY}
     vapi_private_key: ${VAPI_PRIVATE_KEY}
 
