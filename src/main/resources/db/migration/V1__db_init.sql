@@ -1,14 +1,16 @@
 -- Table: app_configurations
 CREATE TABLE IF NOT EXISTS app_configurations (
-    vapi_private_key VARCHAR(100),
-    vapi_public_key VARCHAR(100),
-    keycloak_admin_email VARCHAR(100),
-    keycloak_admin_password VARCHAR(100),
-    type VARCHAR(100),
-    keycloak_client_id VARCHAR(100),
-    keycloak_realm_name VARCHAR(100),
-    keycloak_url VARCHAR(100),
-    frontend_url VARCHAR(250)
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    vapi_private_key VARCHAR(255),
+    vapi_public_key VARCHAR(255),
+    keycloak_admin_email VARCHAR(255),
+    keycloak_admin_password VARCHAR(255),
+    keycloak_client_id VARCHAR(255),
+    keycloak_realm_name VARCHAR(255),
+    keycloak_url VARCHAR(500),
+    frontend_url VARCHAR(500),
+    type VARCHAR(50) NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Table: assistant
