@@ -28,7 +28,7 @@ spring:
     password: ${spring.datasource.password}
 
   frontend:
-    url: ${FRONTEND_URL}
+    urls: ${FRONTEND_URL}
 
   datasource:
     url: ${DB_URL}

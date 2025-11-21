@@ -11,14 +11,14 @@ import java.util.List;
 
 @Configuration
 public class CorsConfig {
-    @Value("${spring.frontend.url}")
-    String FRONTEND_URL;
+    @Value("${spring.frontend.urls}")
+    List<String> FRONTEND_URLS;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        System.out.println("FRONTENDURL : {}" + FRONTEND_URL);
+        System.out.println("FRONTENDURL : {}" + FRONTEND_URLS);
         CorsConfiguration cors = new CorsConfiguration();
-        cors.setAllowedOrigins(List.of(FRONTEND_URL));
+        cors.setAllowedOrigins(FRONTEND_URLS);
         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         cors.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Origin", "Accept"));
         cors.setExposedHeaders(List.of("Content-Disposition"));
